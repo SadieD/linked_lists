@@ -1,7 +1,7 @@
 module LinkedList
 
 class LinkedList
-  attr_reader :size, :head, :tail
+  attr_reader :size, :head
   
   def initialize(head=nil)
     @head = head
@@ -10,7 +10,7 @@ class LinkedList
   
   def append(data)
     temp = Node.new(data)
-    size > 0 ? at(size-1).next_node = temp : @head = temp
+    @size > 0 ? at(@size-1).next_node = temp : @head = temp
     @size += 1
     to_s
   end
@@ -22,8 +22,40 @@ class LinkedList
     to_s
   end
   
+  def tail
+    size > 1 ? at(size-1) : @head
+  end
+  
+  
+  def at(index)
+    node = @head
+    index.times { |x| node = node.next_node } if size > 1 and index > 0
+    node
+  end
+  
+  def pop
+    at(@size - 2).next_node = nil
+    @size -= 1
+  end
+  
+  def contains?(data)
+    (@size).times { |x| return true if at(x).value == data }
+    return false
+  end
+  
+  def find(data)
+    (@size).times { |x| return x if at(x).value == data }
+    return nil
+  end
+  
+  def to_s
+    contents = 'nil'
+    (@size-1).downto(0) { |x| contents.prepend("( #{at(x).value} ) -> ")}
+    contents
+  end
+  
   def insert_at(index, data)
-    if index > 0 and index < size
+    if index > 0 and index < @size
       temp = Node.new(data, at(index))
       at(index - 1).next_node = temp if index > 0
       @size += 1
@@ -34,36 +66,14 @@ class LinkedList
   end
   
   def remove_at(index)
-    if index > 0 and index < size
+    if index > 0 and index < @size
       at(index - 1).next_node = at(index + 1)
       @size -= 1
     elsif index == 0
-      size > 1 ? @head = at(index + 1) : @head = nil
+      @size > 1 ? @head = at(index + 1) : @head = nil
       @size -= 1
     end
     to_s
-  end
-  
-  def at(index)
-    node = @head
-    index.times { |x| node = node.next_node } if size > 1 and index > 0
-    node
-  end
-  
-  def contains?(data)
-    (size).times { |x| return true if at(x).value == data }
-    return false
-  end
-  
-  def find(data)
-    (size).times { |x| return x if at(x).value == data }
-    return nil
-  end
-  
-  def to_s
-    contents = 'nil'
-    (size-1).downto(0) { |x| contents.prepend("( #{at(x).value} ) -> ")}
-    contents
   end
   
 end
